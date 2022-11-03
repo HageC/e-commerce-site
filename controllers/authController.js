@@ -6,9 +6,22 @@ const register = async (req, res, next) => {
   if (!name || !email || !password) {
     return next(new CustomError("Please enter all values.", 400));
   }
+
+  const userExists = await User.findOne({ email });
+
+  if (userExists) {
+    return next(new CustomError("Email is already in use.", 400));
+  }
+
   try {
     const user = await User.create({ name, email, password });
-    res.status(201).json({ user });
+    const tokenUser = { name: user.name, id: user._id, role: user.role };
+    const token = user.createToken({ payload: tokenUser });
+    res.cookie("token", token, {
+      httpOnly: true,
+      expires: new Date(Date.now() + 86400000),
+    });
+    res.status(201).json({ user: tokenUser });
   } catch (error) {
     next(error);
   }
