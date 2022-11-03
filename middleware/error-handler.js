@@ -12,7 +12,7 @@ const errorHandler = (err, req, res, next) => {
 
     defaultResponse.message = `${defaultResponse.message} ${
       defaultResponse.message.split(", ").length > 1 ? "are" : "is"
-    } invalid`;
+    } invalid.`;
   }
 
   if (err.code && err.code === 11000) {

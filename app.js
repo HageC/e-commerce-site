@@ -1,17 +1,21 @@
 import express from "express";
 import mongoose from "mongoose";
-import "dotenv/config";
+import morgan from "morgan";
 import notFound from "./middleware/not-found.js";
 import errorHandler from "./middleware/error-handler.js";
-import CustomError from "./error/custom-error.js";
+import authRouter from "./routes/authRoutes.js";
+import "dotenv/config";
 const port = process.env.PORT || 5000;
 const app = express();
 
+//app.use(morgan("tiny"));
 app.use(express.json());
 
-app.get("/", (req, res, next) => {
-  res.send("Hello World");
+app.get("/", (req, res) => {
+  res.send("Hello World.");
 });
+
+app.use("/api/auth", authRouter);
 
 app.use(notFound);
 app.use(errorHandler);
