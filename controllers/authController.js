@@ -13,6 +13,7 @@ const register = async (req, res, next) => {
     if (userExists) {
       return next(new CustomError("Email is already in use.", 400));
     }
+
     const user = await User.create({ name, email, password });
     const tokenUser = { name: user.name, id: user._id, role: user.role };
     const token = user.createToken({ payload: tokenUser });
@@ -22,6 +23,7 @@ const register = async (req, res, next) => {
       secure: process.env.NODE_ENV === "production",
       signed: true,
     });
+
     res.status(201).json({ user: tokenUser });
   } catch (error) {
     next(error);
@@ -33,6 +35,7 @@ const login = async (req, res, next) => {
   if (!email || !password) {
     return next(new CustomError("Please enter all values.", 400));
   }
+
   try {
     const user = await User.findOne({ email });
 
@@ -45,15 +48,25 @@ const login = async (req, res, next) => {
     if (!validPassword) {
       return next(new CustomError("Password is invalid.", 401));
     }
+
+    const tokenUser = { name: user.name, id: user._id, role: user.role };
+    const token = user.createToken({ payload: tokenUser });
+    res.cookie("token", token, {
+      httpOnly: true,
+      expires: new Date(Date.now() + 86400000),
+      secure: process.env.NODE_ENV === "production",
+      signed: true,
+    });
+
+    res.status(201).json({ user: tokenUser });
   } catch (error) {
     next(error);
   }
-
-  res.send("Login");
 };
 
 const logout = async (req, res, next) => {
-  res.send("Logout");
+  res.cookie("token", "", { httpOnly: true, expires: new Date(Date.now()) });
+  res.status(200).json({ messsage: "User has logged out." });
 };
 
 export { register, login, logout };
