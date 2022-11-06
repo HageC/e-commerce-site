@@ -4,6 +4,7 @@ import morgan from "morgan";
 import notFound from "./middleware/not-found.js";
 import errorHandler from "./middleware/error-handler.js";
 import authRouter from "./routes/authRoutes.js";
+import userRouter from "./routes/userRoutes.js";
 import cookieParser from "cookie-parser";
 import "dotenv/config";
 const port = process.env.PORT || 5000;
@@ -18,7 +19,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
-
+app.use("/api/user", userRouter);
 app.use(notFound);
 app.use(errorHandler);
 
