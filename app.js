@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
-app.use("/api/user", userRouter);
+app.use("/api/users", userRouter);
 app.use(notFound);
 app.use(errorHandler);
 

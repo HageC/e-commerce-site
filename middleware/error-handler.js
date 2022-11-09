@@ -20,6 +20,11 @@ const errorHandler = (err, req, res, next) => {
     defaultResponse.message = `${Object.keys(err.keyValue)}`;
   }
 
+  if (err.name === "CastError") {
+    defaultResponse.message = `No data found with id: ${err.value}`;
+    defaultResponse.statusCode = 404;
+  }
+
   res
     .status(defaultResponse.statusCode)
     .json({ message: defaultResponse.message });
