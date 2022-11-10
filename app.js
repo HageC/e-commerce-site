@@ -7,7 +7,6 @@ import authRouter from "./routes/authRoutes.js";
 import userRouter from "./routes/userRoutes.js";
 import cookieParser from "cookie-parser";
 import "dotenv/config";
-import authenticate from "./middleware/authenticate.js";
 const port = process.env.PORT || 5000;
 const app = express();
 
@@ -20,7 +19,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
-app.use("/api/users", authenticate, userRouter);
+app.use("/api/users", userRouter);
 app.use(notFound);
 app.use(errorHandler);
 
