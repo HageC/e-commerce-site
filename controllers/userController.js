@@ -25,7 +25,7 @@ const getUser = async (req, res, next) => {
 };
 
 const showUser = async (req, res, next) => {
-  res.send("Show user");
+  res.staus(200).json({ user: req.user });
 };
 
 const updateUser = async (req, res, next) => {
@@ -33,7 +33,23 @@ const updateUser = async (req, res, next) => {
 };
 
 const updatePassword = async (req, res, next) => {
-  res.send("Update password");
+  const { currentPassword, newPassword } = req.body;
+  if (!currentPassword || !newPassword) {
+    return next(new CustomError("Enter all values.", 400));
+  }
+
+  try {
+    const user = await User.findOne({ _id: req.user.id });
+    const isValid = await user.comparePassword(currentPassword);
+    if (!isValid) {
+      return next(new CustomError("Password is incorrect.", 401));
+    }
+    user.password = newPassword;
+    await user.save();
+    res.status(200).json({ message: "Password has been changed." });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export { getUsers, getUser, showUser, updateUser, updatePassword };

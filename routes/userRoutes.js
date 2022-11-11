@@ -12,9 +12,9 @@ import {
 const router = express.Router();
 
 router.route("/").get(authenticate, checkPermissions, getUsers);
-router.route("/show").get(showUser);
+router.route("/show").get(authenticate, showUser);
 router.route("/updateUser").patch(updateUser);
-router.route("/updatePassword").patch(updatePassword);
+router.route("/updatePassword").patch(authenticate, updatePassword);
 router.route("/:id").get(authenticate, getUser);
 
 export default router;
