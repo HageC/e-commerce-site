@@ -17,7 +17,9 @@ const errorHandler = (err, req, res, next) => {
 
   if (err.code && err.code === 11000) {
     defaultResponse.statusCode = 400;
-    defaultResponse.message = `${Object.keys(err.keyValue)}`;
+    defaultResponse.message = `Duplicate value entered for ${Object.keys(
+      err.keyValue
+    )} field, enter another value.`;
   }
 
   if (err.name === "CastError") {

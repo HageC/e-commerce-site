@@ -24,12 +24,37 @@ const getUser = async (req, res, next) => {
   }
 };
 
-const showUser = async (req, res, next) => {
+const showUser = async (req, res) => {
   res.staus(200).json({ user: req.user });
 };
 
 const updateUser = async (req, res, next) => {
-  res.send("Update user");
+  const { name, email } = req.body;
+  if (!name || !email) {
+    return next(new CustomError("Enter all values", 400));
+  }
+  try {
+    const user = await User.findOne({ _id: req.user.id });
+    user.name = name;
+    user.email = email;
+
+    await user.save();
+
+    const tokenUser = { name: user.name, id: user._id, role: user.role };
+
+    const token = user.createToken({ payload: tokenUser });
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      expires: new Date(Date.now() + 86400000),
+      secure: process.env.NODE_ENV === "production",
+      signed: true,
+    });
+
+    res.status(201).json({ user: tokenUser });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const updatePassword = async (req, res, next) => {
