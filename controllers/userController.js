@@ -13,11 +13,17 @@ const getUsers = async (req, res, next) => {
 
 const getUser = async (req, res, next) => {
   const { id } = req.params;
+
+  if (req.user.id !== id && req.user.role === "user") {
+    return next(new CustomError("You are not authroized to view this.", 401));
+  }
+
   try {
     const user = await User.findOne({ _id: id }).select("-password");
     if (!user) {
       return next(new CustomError(`User with id: ${id} does not exist.`, 404));
     }
+
     res.status(200).json({ user });
   } catch (error) {
     next(error);
