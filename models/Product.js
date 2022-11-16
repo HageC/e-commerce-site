@@ -42,6 +42,10 @@ const ProductSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  freeShipping: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 export default mongoose.model("Product", ProductSchema);
