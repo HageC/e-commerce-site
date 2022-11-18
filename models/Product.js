@@ -46,6 +46,19 @@ const ProductSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  stock: {
+    type: Number,
+    default: 0,
+  },
+  rating: {
+    type: Number,
+    default: 0,
+  },
+  user: {
+    type: mongoose.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
 });
 
 export default mongoose.model("Product", ProductSchema);
