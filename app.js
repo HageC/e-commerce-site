@@ -1,6 +1,5 @@
 import express from "express";
 import mongoose from "mongoose";
-import morgan from "morgan";
 import notFound from "./middleware/not-found.js";
 import errorHandler from "./middleware/error-handler.js";
 import authRouter from "./routes/authRoutes.js";
@@ -11,7 +10,6 @@ import "dotenv/config";
 const port = process.env.PORT || 5000;
 const app = express();
 
-//app.use(morgan("tiny"));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 app.get("/", (req, res) => {
